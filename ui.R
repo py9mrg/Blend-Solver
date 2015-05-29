@@ -4,18 +4,15 @@ shinyUI(fluidPage(
   titlePanel("Uploading Files"),
   sidebarLayout(
     sidebarPanel(
-      fileInput('file1', 'Choose Excel File',
-                accept=c('text/csv', 
-                         'text/comma-separated-values,text/plain', 
-                         '.csv')),
-      numericInput("nrow", "Number of Rows", 2),
-      numericInput("ncol", "Number of Columns", 2)
-      ),
+      radioButtons("radio", label = h3("Radio buttons"),
+                   choices = list("Manual" = "Manual", "File" = "File"), 
+                   selected = "File"),
+      uiOutput('choice')
+    ),
     mainPanel(
       tableOutput('contents'),
       tableOutput('results'),
       uiOutput("inmatrix")
     )
-    )
   )
-)
+))
