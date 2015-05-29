@@ -15,7 +15,7 @@ shinyServer(function(input, output) {
       return(NULL)
     
     read.xls(
-      inFile$datapath, sheet = 1, header = T, sep = ",",row.names=1
+      inFile$datapath, sheet = 1, header = T, sep = ",",row.names = 1
     ) #gdata read.xls needed for data input because read.xlsx (xlsx package) reads blanck cells. But xlsx needed for writing xlsx files
     
   })
@@ -26,8 +26,14 @@ shinyServer(function(input, output) {
       return(NULL)
     
     raw_data <- read.xls(
-      inFile$datapath, sheet = 1, header = T, sep = ",",row.names=1
+      inFile$datapath, sheet = 1, header = T, sep = ",",row.names = 1
     )
     calculate(raw_data)
+  }, include.rownames = FALSE)
+  
+  output$inmatrix <- renderUI({
+    matrixInput("tbl", "Enter Data", as.data.frame(matrix(0,nrow=input$nrow,ncol=input$ncol)))
   })
+
+  
 })

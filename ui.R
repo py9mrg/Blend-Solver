@@ -7,11 +7,15 @@ shinyUI(fluidPage(
       fileInput('file1', 'Choose Excel File',
                 accept=c('text/csv', 
                          'text/comma-separated-values,text/plain', 
-                         '.csv'))
+                         '.csv')),
+      numericInput("nrow", "Number of Rows", 2),
+      numericInput("ncol", "Number of Columns", 2)
       ),
     mainPanel(
       tableOutput('contents'),
-      tableOutput('results')
+      tableOutput('results'),
+      uiOutput("inmatrix")
+    )
     )
   )
-))
+)

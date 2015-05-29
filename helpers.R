@@ -1,6 +1,8 @@
 require(limSolve)
 require(xlsx)
 require(gdata)
+require(shinyIncubator)
+require(shinyTable)
 
 calculate<-function(raw_data){
   par_mat<-as.matrix(raw_data[,1:(ncol(raw_data)-1)])
@@ -17,7 +19,7 @@ calculate<-function(raw_data){
   res_props<-par_mat%*%matrix(data=X$X,ncol=1)
   res_props
   
-  return(as.data.frame(X$X))
+  return(as.data.frame(t(X$X)))
 }
 
 # par_mat<-as.matrix(raw_data[,1:(ncol(raw_data)-1)])
