@@ -5,11 +5,13 @@ shinyServer(function(input, output) {
   
   output$choice <- renderUI({
     if(input$radio == "Manual"){
-      return(list(numericInput("nrow", "Number of Rows", 2),
-      numericInput("ncol", "Number of Columns", 2)))
+      return(list(numericInput("nrow", "Number of Rows", 3),
+      numericInput("ncol", "Number of Columns", 3)))
     }
-    fileInput(
+    else{
+      fileInput(
       'file1', 'Choose Excel File')
+    }
   })
   
   output$value <- renderPrint({ input$radio })
@@ -29,17 +31,29 @@ shinyServer(function(input, output) {
   })
   
   output$results <- renderTable({
+    if(input$radio == "Manual"){
+      calculate(input$tbl)
+    }
+    else{
     inFile <- input$file1
     if (is.null(inFile))
       return(NULL)
     calculate(dataInput())
-  }, include.rownames = FALSE)
+    }
+  }
+    , include.rownames = FALSE)
   
   output$inmatrix <- renderUI({
-    if(input$radio != "File"){
+    if(is.null(input$nrow)) return(NULL)
+    else{
+    if(input$radio == "Manual"){
     matrixInput("tbl", "Enter Data", as.data.frame(matrix(
       0,nrow = input$nrow,ncol = input$ncol
     )))
+    }
+    else{
+      return(NULL)
+    }
     }
   })
   

@@ -1,7 +1,7 @@
 require(shiny)
 
 shinyUI(fluidPage(
-  titlePanel("Uploading Files"),
+  titlePanel("Blend Solver"),
   sidebarLayout(
     sidebarPanel(
       radioButtons("radio", label = h3("Radio buttons"),
