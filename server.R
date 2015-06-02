@@ -2,6 +2,10 @@ require(shiny)
 source('helpers.R')
 
 shinyServer(function(input, output) {
+  #This section initiates the example matrices used in description sections
+  
+  output$example1<-renderTable({matrix(1,nrow=2,ncol=2)})
+  
  # This section sets up whether the user inputs data by Excel file upload or manually
   output$choice <- renderUI({ # sets up the input data method based on user choice 
     if(input$radio == "Manual"){
@@ -43,7 +47,7 @@ shinyServer(function(input, output) {
     }
   })
   
-  # This section sets up whether the user inputs totals (E, F matrices) by Excel file upload or manually 
+  # This section sets up whether the user inputs totals (E, F matrices) by Excel file upload or manually. Really this is just setting equalities, but I can't be bothered to rename
   
   tmp2 <- reactive({ # sets up the required columns for the manual totals entry
     if(input$radio == "Manual") return(ncol(input$tbl))
@@ -52,7 +56,7 @@ shinyServer(function(input, output) {
   
   output$choice2 <- renderUI({ # sets up whether to read by file or manually the totals, based on user choice 2
     if(input$radio2 == "Manual"){
-      return(list(helpText("Say something useful here"),numericInput("nrow2", "Number of Totals", 1)))
+      return(list(helpText("Say something useful here"),numericInput("nrow2", "Number of Equalities", 1)))
     }
     else{
       list(helpText("Say something useful here"),fileInput(
@@ -197,7 +201,7 @@ shinyServer(function(input, output) {
   # This section does all the calculations and renders the results.
   
   results<-eventReactive(input$calculateButton,{
-      if(is.null(dataInput2())){
+      if(is.null(dataInput2())){ # if you decide to add in a default option instead of explicitly showing the default, then "switch" will be useful here.
         totals<-input$totals
       } else{
         totals<-dataInput2()
@@ -212,10 +216,20 @@ shinyServer(function(input, output) {
       } else{
         constraints<-dataInput3()
       }
-    if(is.null(data) | is.null(totals) | is.null(constraints)){
+      if(is.null(dataInput4_x())){
+        Wx<-input$Wx
+      } else{
+        Wx<-dataInput4_x()
+      }
+      if(is.null(dataInput4_a())){
+        Wa<-input$Wa
+      } else{
+        Wa<-dataInput4_a()
+      }
+    if(is.null(data) | is.null(totals) | is.null(constraints) | is.null(Wx) | is.null(Wa)){
       return(NULL)
     } else{
-      calculate(data,totals,constraints)
+      calculate(data,totals,constraints,Wx,Wa)
     }
   })
         
