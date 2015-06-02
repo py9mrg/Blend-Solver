@@ -4,10 +4,18 @@ require(gdata)
 require(shinyIncubator)
 require(shinyTable)
 
-calculate<-function(raw_data,E,F){
+calculate<-function(raw_data,totals){
   par_mat<-as.matrix(raw_data[,1:(ncol(raw_data)-1)])
   target<-as.matrix(raw_data[,(ncol(raw_data))])
   
+  if(nrow(totals) > 1){
+    E<-as.matrix(totals[,1:(ncol(totals)-1)])
+    F<-as.matrix(totals[,(ncol(totals))])
+  } else if(nrow(totals) == 1){
+    E<-as.vector(totals[,1:(ncol(totals)-1)])
+    F<-as.vector(totals[,(ncol(totals))])
+  }
+                              
   G<-diag(ncol(par_mat))
   H<-rep(0,ncol(par_mat))
   

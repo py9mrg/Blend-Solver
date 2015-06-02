@@ -23,7 +23,7 @@ shinyUI(fluidPage(
       tableOutput('contents'),
       hr(),
       uiOutput('totals'),
-      uiOutput('totals2'),
+      tableOutput('contents2'),
       hr(),
       h3('Results'),
       tableOutput('results')
