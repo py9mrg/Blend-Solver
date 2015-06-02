@@ -4,22 +4,25 @@ require(gdata)
 require(shinyIncubator)
 require(shinyTable)
 
-calculate <- function(raw_data,totals,constraints) {
+calculate <- function(raw_data,totals,constraints,weights_x,weights_a) {
   par_mat <- as.matrix(raw_data[,1:(ncol(raw_data) - 1)])
   target <- as.matrix(raw_data[,(ncol(raw_data))])
   
   if (nrow(totals) > 1) {
     E <- as.matrix(totals[,1:(ncol(totals) - 1)])
-    F <- as.matrix(totals[,(ncol(totals))])
+    F <- as.vector(totals[,(ncol(totals))])
   } else if (nrow(totals) == 1) {
     E <- as.vector(totals[,1:(ncol(totals) - 1)])
     F <- as.vector(totals[,(ncol(totals))])
   }
   
   G<-as.matrix(constraints[,1:(ncol(constraints) - 1)])
-  H <- as.matrix(constraints[,(ncol(constraints))])
+  H <- as.vector(constraints[,(ncol(constraints))])
   
-  X <- lsei(par_mat, target, E, F, G, H)
+  Wx<-unlist(weights_x)
+  Wa<-unlist(weights_a)
+
+  X <- lsei(A=par_mat, B=target, E=E, F=F, G=G, H=H, Wx=Wx, Wa=Wa)
   X
   res_props <- par_mat %*% matrix(data = X$X,ncol = 1)
   res_props
