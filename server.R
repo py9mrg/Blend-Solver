@@ -52,7 +52,7 @@ shinyServer(function(input, output) {
   
   output$choice2 <- renderUI({ # sets up whether to read by file or manually the totals, based on user choice 2
     if(input$radio2 == "Manual"){
-      return(list(helpText("Say something useful here"),numericInput("nrow2", "Number of Rows", 1)))
+      return(list(helpText("Say something useful here"),numericInput("nrow2", "Number of Totals", 1)))
     }
     else{
       list(helpText("Say something useful here"),fileInput(
@@ -80,7 +80,7 @@ shinyServer(function(input, output) {
     else{
       if(input$radio2 == "Manual"){
         matrixInput("totals", "Totals Input", as.data.frame(matrix(
-          0,nrow = input$nrow2,ncol = tmp2()
+          1,nrow = input$nrow2,ncol = tmp2()
         )))
         
       }
@@ -90,53 +90,138 @@ shinyServer(function(input, output) {
     }
   })
   
+  # This section sets up the various constraints that may be entered into the solver.
+  
+  output$choice3 <- renderUI({ # sets up whether to read by file or manually the constraints, based on user choice 2
+    if(input$radio3 == "Manual"){
+      return(list(helpText("Say something useful here"),numericInput("nrow3", "Number of Extra Constraints", 0))) # need new number of rows
+    }
+    else{
+      list(helpText("Say something useful here"),fileInput(
+        'file3', 'Choose Excel File'))
+    }
+  })
+  
+  dataInput3 <- reactive({ # read constraints in from file if that is chosen
+    if(input$radio3 == "File"){
+      inFile <- input$file3
+      if (is.null(inFile))
+        return(NULL)
+      read.xls(
+        inFile$datapath, sheet = 1, header = T, sep = ","#,row.names = 1
+      ) #gdata read.xls needed for data input because read.xlsx (xlsx package) reads blanck cells. But xlsx needed for writing xlsx files
+    }
+  })
+  
+  output$contents3 <- renderTable({ # show the read constraints
+    dataInput3()
+  })
+  
+  output$constraints <- renderUI({ # do constraints manually
+    if(is.null(tmp2())) return(NULL)
+    else{
+      if(input$radio3 == "Manual"){
+        if(input$radio == "File"){
+        matrixInput("constraints", "Constraints Input", as.data.frame(
+          cbind(rbind(diag(ncol(dataInput())-1),matrix(0,nrow=(input$nrow3),ncol=ncol(dataInput())-1)),seq(0,0,length=(ncol(dataInput())-1+input$nrow3))) # will have same number of columns and rows as input data, but different rows
+        ))
+        } else{
+          matrixInput("constraints", "Constraints Input", as.data.frame(
+            cbind(rbind(diag(ncol(input$tbl)-1),matrix(0,nrow=(input$nrow3),ncol=ncol(input$tbl)-1)),seq(0,0,length=(ncol(input$tbl)-1+input$nrow3))) # will have same number of columns and rows as input data, but different rows
+          ))
+        }
+      } else{
+        return(NULL)
+      }
+    }
+  })
+  
+  # This section sets up any weights the user might desire.
+  
+  output$choice4 <- renderUI({ # sets up whether to read by file or manually the constraints, based on user choice 2
+    if(input$radio4 == "Manual"){
+      return(helpText("Say something useful here")) # Don't need any rows defined here, weights are fixed at 1 row each for Wx, Wa
+    }
+    else{
+      list(helpText("Say something useful here x"),fileInput(
+        'file_x', 'Choose Excel File'),helpText("Say something useful here a"),fileInput(
+          'file_a', 'Choose Excel File'))
+    }
+  })
 
-  # THis section does the calculation and outputs the results - will need to rewrite this to separate out the options
+  dataInput4_x <- reactive({ # read constraints in from file if that is chosen
+    if(input$radio4 == "File"){
+      inFile_x <- input$file_x
+      if (is.null(inFile_x))
+        return(NULL)
+      read.xls(
+        inFile_x$datapath, sheet = 1, header = T, sep = ",",row.names = 1
+      ) #gdata read.xls needed for data input because read.xlsx (xlsx package) reads blanck cells. But xlsx needed for writing xlsx files
+    }
+  })
+  
+  dataInput4_a <- reactive({ # read constraints in from file if that is chosen
+    if(input$radio4 == "File"){
+      inFile_a <- input$file_a
+      if (is.null(inFile_a))
+        return(NULL)
+      read.xls(
+        inFile_a$datapath, sheet = 1, header = T, sep = ",",row.names = 1
+      ) #gdata read.xls needed for data input because read.xlsx (xlsx package) reads blanck cells. But xlsx needed for writing xlsx files
+    }
+  })
+  
+  output$contents4_x <- renderTable({ # show the read constraints
+    dataInput4_x()
+  })
+  
+  output$contents4_a <- renderTable({ # show the read constraints
+    dataInput4_a()
+  })
+  
+#   output$weights <- renderUI({ # do totals manually
+#     if(is.null(tmp2())) return(NULL)
+#     else{
+#       if(input$radio4 == "Manual"){
+#         matrixInput("weights", "Weights Input", as.data.frame(matrix(
+#           1,nrow = 2,ncol = tmp2()-1 # number of components only required for this table - no equalities/targets used.
+#         )))
+#         
+#       }
+#       else{
+#         return(NULL)
+#       }
+#     }
+#   })
+  
+  # This section does all the calculations and renders the results.
   
   results<-eventReactive(input$calculateButton,{
       if(is.null(dataInput2())){
         totals<-input$totals
-        print(totals)
       } else{
         totals<-dataInput2()
-        print(totals)
       }
       if(is.null(dataInput())){
         data<-input$tbl
       } else{
         data<-dataInput()
       }
-    if(is.null(data) | is.null(totals)){
+      if(is.null(dataInput3())){
+        constraints<-input$constraints
+      } else{
+        constraints<-dataInput3()
+      }
+    if(is.null(data) | is.null(totals) | is.null(constraints)){
       return(NULL)
     } else{
-      calculate(data,totals)
+      calculate(data,totals,constraints)
     }
   })
         
   
   
-#   results <- eventReactive(input$calculateButton,{
-#     if(input$radio == "Manual"){
-#       if(is.null(input$tbl)){
-#         return(NULL)
-#       } else if(is.null(input$totals)){
-#         return(NULL)
-#       } else{
-#         calculate(input$tbl,totals=input$totals)
-#       }
-#     } else{
-#     inFile <- input$file1
-#     if (is.null(inFile)) 
-#       {
-#       return(NULL)
-#     } else if(is.null(input$totals)){
-#       return(NULL)
-#     } else{
-#       calculate(dataInput(),totals=dataInput2())
-#     }
-#     }
-#   })
-  
+
   output$results <- renderTable({results()} , include.rownames = FALSE)
   
 })
