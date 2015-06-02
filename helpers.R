@@ -4,12 +4,9 @@ require(gdata)
 require(shinyIncubator)
 require(shinyTable)
 
-calculate<-function(raw_data){
+calculate<-function(raw_data,E,F){
   par_mat<-as.matrix(raw_data[,1:(ncol(raw_data)-1)])
   target<-as.matrix(raw_data[,(ncol(raw_data))])
-  
-  E<-rep(1,ncol(par_mat))
-  F<-1
   
   G<-diag(ncol(par_mat))
   H<-rep(0,ncol(par_mat))
