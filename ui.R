@@ -34,19 +34,23 @@ shinyUI(fluidPage(
       actionButton("calculateButton", "Calculate")
     ),
     mainPanel(
+      h3('This is your inputted data'),
       uiOutput('inmatrix'),
       tableOutput('contents'),
       hr(),
+      h3('These are your defined equalities'),
       uiOutput('totals'),
       tableOutput('contents2'),
       hr(),
+      h3('These are your defined constraints'),
       uiOutput('constraints'),
       tableOutput('contents3'),
       hr(),
-      #uiOutput('weights'),
+      h3('These are your defined weightings'),
+      uiOutput('weights_x'),
+      uiOutput('weights_a'),
       tableOutput('contents4_x'),
       tableOutput('contents4_a'),
-      
       hr(),
       h3('Results'),
       tableOutput('results')

@@ -6,21 +6,21 @@ require(shinyTable)
 
 calculate <- function(raw_data,totals,constraints,weights_x,weights_a) {
   par_mat <- as.matrix(raw_data[,1:(ncol(raw_data) - 1)])
-  target <- as.matrix(raw_data[,(ncol(raw_data))])
+  target <- as.vector(unlist((raw_data[,(ncol(raw_data))])))
   
   if (nrow(totals) > 1) {
     E <- as.matrix(totals[,1:(ncol(totals) - 1)])
-    F <- as.vector(totals[,(ncol(totals))])
+    F <- as.vector(unlist(totals[,(ncol(totals))]))
   } else if (nrow(totals) == 1) {
-    E <- as.vector(totals[,1:(ncol(totals) - 1)])
-    F <- as.vector(totals[,(ncol(totals))])
+    E <- as.vector(unlist(totals[,1:(ncol(totals) - 1)]))
+    F <- as.vector(unlist(totals[,(ncol(totals))]))
   }
   
   G<-as.matrix(constraints[,1:(ncol(constraints) - 1)])
   H <- as.vector(constraints[,(ncol(constraints))])
   
-  Wx<-unlist(weights_x)
-  Wa<-unlist(weights_a)
+  Wx<-as.vector(unlist(weights_x))
+  Wa<-as.vector(unlist(weights_a))
 
   X <- lsei(A=par_mat, B=target, E=E, F=F, G=G, H=H, Wx=Wx, Wa=Wa)
   X

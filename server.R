@@ -49,6 +49,11 @@ shinyServer(function(input, output) {
   
   # This section sets up whether the user inputs totals (E, F matrices) by Excel file upload or manually. Really this is just setting equalities, but I can't be bothered to rename
   
+  tmp <- reactive({ # sets up the required rows for the manual totals entry
+    if(input$radio == "Manual") return(nrow(input$tbl))
+    else return(nrow(dataInput()))
+  })
+  
   tmp2 <- reactive({ # sets up the required columns for the manual totals entry
     if(input$radio == "Manual") return(ncol(input$tbl))
        else return(ncol(dataInput()))
@@ -183,20 +188,36 @@ shinyServer(function(input, output) {
     dataInput4_a()
   })
   
-#   output$weights <- renderUI({ # do totals manually
-#     if(is.null(tmp2())) return(NULL)
-#     else{
-#       if(input$radio4 == "Manual"){
-#         matrixInput("weights", "Weights Input", as.data.frame(matrix(
-#           1,nrow = 2,ncol = tmp2()-1 # number of components only required for this table - no equalities/targets used.
-#         )))
-#         
-#       }
-#       else{
-#         return(NULL)
-#       }
-#     }
-#   })
+  output$weights_x <- renderUI({ # do totals manually
+    if(is.null(tmp2())) return(NULL)
+    else{
+      if(input$radio4 == "Manual"){
+        matrixInput("weights_x", "Weights_x Input", as.data.frame(matrix(
+          format(round(1/(tmp2()-1),digits=3),nsmall=3),nrow = 1,ncol = tmp2()-1
+        )))
+        
+      }
+      else{
+        return(NULL)
+      }
+    }
+  })
+  
+  output$weights_a <- renderUI({ # do totals manually
+    if(is.null(tmp2())) return(NULL)
+    else{
+      if(input$radio4 == "Manual"){
+        matrixInput("weights_a", "Weights_a Input", as.data.frame(matrix(
+          format(round(1/(tmp()),digits=3),nsmall=3),nrow = 1,ncol = tmp()
+        )))
+        
+      }
+      else{
+        return(NULL)
+      }
+    }
+  })
+
   
   # This section does all the calculations and renders the results.
   
@@ -217,12 +238,12 @@ shinyServer(function(input, output) {
         constraints<-dataInput3()
       }
       if(is.null(dataInput4_x())){
-        Wx<-input$Wx
+        Wx<-input$weights_x
       } else{
         Wx<-dataInput4_x()
       }
       if(is.null(dataInput4_a())){
-        Wa<-input$Wa
+        Wa<-input$weights_a
       } else{
         Wa<-dataInput4_a()
       }

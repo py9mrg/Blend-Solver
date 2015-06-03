@@ -49,8 +49,8 @@ Requires: gtools
 
 Package: gtools
 Source: CRAN
-Version: 3.4.2
-Hash: 2446af0c27ed699f87d1a176992763af
+Version: 3.5.0
+Hash: 471b2e2452dfb30fdc1dd6f1b567925a
 
 Package: htmltools
 Source: CRAN
