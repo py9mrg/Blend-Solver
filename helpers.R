@@ -23,11 +23,12 @@ calculate <- function(raw_data,totals,constraints,weights_x,weights_a) {
   Wa<-as.vector(unlist(weights_a))
 
   X <- lsei(A=par_mat, B=target, E=E, F=F, G=G, H=H, Wx=Wx, Wa=Wa)
-  X
+  tmp_x<-t(X$X)
+  rownames(tmp_x)<-"Component Proportions"
   res_props <- par_mat %*% matrix(data = X$X,ncol = 1)
-  res_props
+  colnames(res_props)<-"Resulting Properties"
   
-  return(as.data.frame(t(X$X)))
+  return(list(renderTable(as.data.frame(tmp_x)),renderTable(as.data.frame(res_props))))
 }
 
 # par_mat<-as.matrix(raw_data[,1:(ncol(raw_data)-1)])

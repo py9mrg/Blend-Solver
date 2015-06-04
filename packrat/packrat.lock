@@ -2,18 +2,29 @@ PackratFormat: 1.4
 PackratVersion: 0.4.3.27
 RVersion: 3.2.0
 Repos: CRAN=http://cran.rstudio.com,
-    CRANextra=http://www.stats.ox.ac.uk/pub/RWin,
-    library=file:///C:/Program Files/R/R-3.2.0/library/
+    CRANextra=http://www.stats.ox.ac.uk/pub/RWin
 
 Package: MASS
 Source: CRAN
 Version: 7.3-40
 Hash: 33fe8ee60aa2e8842c66484f0e715f79
 
+Package: PKI
+Source: CRAN
+Version: 0.1-1
+Hash: 7318a29e43951c37bd9990219fd26487
+Requires: base64enc
+
 Package: R6
 Source: CRAN
 Version: 2.0.1
 Hash: 40dff191bf683de95a0b131f9509647e
+
+Package: RCurl
+Source: CRAN
+Version: 1.95-4.6
+Hash: f07380ac0925611455ecf9dcdb8be545
+Requires: bitops
 
 Package: RJSONIO
 Source: CRAN
@@ -24,6 +35,11 @@ Package: Rcpp
 Source: CRAN
 Version: 0.11.6
 Hash: 193916618dce89b287517f457de8fa8b
+
+Package: base64enc
+Source: CRAN
+Version: 0.1-2
+Hash: df66773c6ea9cad0beb6dc3e33e3e3e1
 
 Package: bitops
 Source: CRAN
@@ -104,6 +120,21 @@ Source: CRAN
 Version: 0.9-6
 Hash: 9dbbee37bd08546ea0ed6d3dab821952
 
+Package: rsconnect
+Source: github
+Version: 0.3.79
+Hash: 60f6e76f07c5b4fad2ca6f5ad47e4d15
+Requires: PKI, RCurl, RJSONIO, digest, packrat, rstudioapi, yaml
+GithubRepo: rsconnect
+GithubUsername: rstudio
+GithubRef: v0.99
+GithubSha1: 79f5016e589f622ecf999a64048a46d1e3e683bb
+
+Package: rstudioapi
+Source: CRAN
+Version: 0.3.1
+Hash: 88eea830c60277b858ce9334041b08bb
+
 Package: shiny
 Source: CRAN
 Version: 0.12.0
@@ -146,3 +177,8 @@ Package: xtable
 Source: CRAN
 Version: 1.7-4
 Hash: 30ed90ebdd90a529aab31fd6792a8d61
+
+Package: yaml
+Source: CRAN
+Version: 2.1.13
+Hash: 4854ccabebc225e8a7309fb4a74980de

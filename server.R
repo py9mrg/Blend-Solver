@@ -4,17 +4,69 @@ source('helpers.R')
 shinyServer(function(input, output) {
   #This section initiates the example matrices used in description sections
   
-  output$example1<-renderTable({matrix(1,nrow=2,ncol=2)})
+  output$Excel_Example<-renderTable({
+    tmp<-matrix(c(1,2,4,2,3,5,1.5,2.5,4.5),nrow=3,ncol=3)
+    colnames(tmp)<-c('Comp.1','Comp.2','Target')
+    rownames(tmp)<-c('Param.1','Param.2','Param.3')
+    return(tmp)
+    })
+  output$Manual_Example<-renderTable({
+    tmp<-matrix(c(1,2,4,2,3,5,1.5,2.5,4.5),nrow=3,ncol=3)
+    return(tmp)
+    },include.rownames=F,include.colnames=F)
+  
+  output$Example_Equalities<-renderTable({
+    matrix(c(1,0,1,0,0,1,0.55,0.45),nrow=2,ncol=4)
+    },include.rownames=F,include.colnames=F)
+  
+  output$Example_Equalities2<-renderTable({
+    tmp<-matrix(c(1,0,1,0,0,1,0.55,0.45),nrow=2,ncol=4)
+    colnames(tmp)<-c('Comp.1','Comp.2','Comp.3','Proportion')
+    return(tmp)
+    },include.rownames=F)
+  
+  output$Example_Constraints<-renderTable({
+    tmp<-matrix(c(1,0,0,1,-1,0,1,0,1,0,0,0,1,0,-1,0,0,0,0.2,-0.8),nrow=5,ncol=4)
+    colnames(tmp)<-c('Comp.1','Comp.2','Comp.3','Proportion')
+    return(tmp)
+  },include.rownames=F)
+  
+  output$Example_Wx<-renderTable({
+    tmp<-matrix(c(0.25,0.25,0.25,0.25),nrow=1,ncol=4)
+    colnames(tmp)<-c('Comp.1','Comp.2','Comp.3','Comp.4')
+    return(tmp)
+  },include.rownames=F)
+  
+  output$Example_Wa<-renderTable({
+    tmp<-matrix(c(0.333,0.333,0.333),nrow=1,ncol=3)
+    colnames(tmp)<-c('Param.1','Param.2','Param.3')
+    return(tmp)
+  },include.rownames=F)
+  
+  output$Example_Blend<-renderTable({
+    tmp<-matrix(c(0.25,0.25,0.5),nrow=1,ncol=3)
+    colnames(tmp)<-c('Comp.1','Comp.2','Comp.3')
+    rownames(tmp)<-c('Component Proportions')
+    return(tmp)
+  })
+  
+  output$Example_Properties<-renderTable({
+    tmp<-matrix(c(2.5,1.5,4.5),nrow=3,ncol=1)
+    colnames(tmp)<-c('Resulting Properties')
+    rownames(tmp)<-c('Param.1','Param.2','Param.3')
+    return(tmp)
+  })
+  
   
  # This section sets up whether the user inputs data by Excel file upload or manually
   output$choice <- renderUI({ # sets up the input data method based on user choice 
     if(input$radio == "Manual"){
-      return(list(helpText("Say something useful here"),numericInput("nrow", "Number of Rows", 3),
+      return(list(numericInput("nrow", "Number of Rows", 3),
       numericInput("ncol", "Number of Columns", 3)))
     }
     else{
-      list(helpText("Say something useful here"),fileInput(
-      'file1', 'Choose Excel File'))
+      fileInput(
+      'file1', 'Choose Excel File')
     }
   })
   
@@ -37,7 +89,7 @@ shinyServer(function(input, output) {
     if(is.null(input$nrow)) return(NULL)
     else{
       if(input$radio == "Manual"){
-        matrixInput("tbl", "Enter Data", as.data.frame(matrix(
+        matrixInput("tbl", "Enter Data in table below. See left panel (and Introduction) for explanation.", as.data.frame(matrix(
           0,nrow = input$nrow,ncol = input$ncol
         )))
       }
@@ -61,11 +113,11 @@ shinyServer(function(input, output) {
   
   output$choice2 <- renderUI({ # sets up whether to read by file or manually the totals, based on user choice 2
     if(input$radio2 == "Manual"){
-      return(list(helpText("Say something useful here"),numericInput("nrow2", "Number of Equalities", 1)))
+      return(numericInput("nrow2", "Number of Equalities", 1))
     }
     else{
-      list(helpText("Say something useful here"),fileInput(
-        'file2', 'Choose Excel File'))
+      fileInput(
+        'file2', 'Choose Excel File')
     }
   })
   
@@ -82,7 +134,7 @@ shinyServer(function(input, output) {
   
   output$contents2 <- renderTable({ # show the read totals
     dataInput2()
-  })
+  },include.rownames=F)
   
   output$totals <- renderUI({ # do totals manually
     if(is.null(tmp2())) return(NULL)
@@ -103,11 +155,11 @@ shinyServer(function(input, output) {
   
   output$choice3 <- renderUI({ # sets up whether to read by file or manually the constraints, based on user choice 2
     if(input$radio3 == "Manual"){
-      return(list(helpText("Say something useful here"),numericInput("nrow3", "Number of Extra Constraints", 0))) # need new number of rows
+      return(numericInput("nrow3", "Number of Extra Constraints", 0)) # need new number of rows
     }
     else{
-      list(helpText("Say something useful here"),fileInput(
-        'file3', 'Choose Excel File'))
+      fileInput(
+        'file3', 'Choose Excel File')
     }
   })
   
@@ -124,7 +176,7 @@ shinyServer(function(input, output) {
   
   output$contents3 <- renderTable({ # show the read constraints
     dataInput3()
-  })
+  },include.rownames=F)
   
   output$constraints <- renderUI({ # do constraints manually
     if(is.null(tmp2())) return(NULL)
@@ -149,11 +201,11 @@ shinyServer(function(input, output) {
   
   output$choice4 <- renderUI({ # sets up whether to read by file or manually the constraints, based on user choice 2
     if(input$radio4 == "Manual"){
-      return(helpText("Say something useful here")) # Don't need any rows defined here, weights are fixed at 1 row each for Wx, Wa
+      return(NULL) # Don't need any rows defined here, weights are fixed at 1 row each for Wx, Wa
     }
     else{
-      list(helpText("Say something useful here x"),fileInput(
-        'file_x', 'Choose Excel File'),helpText("Say something useful here a"),fileInput(
+      list(helpText("Upload Component Weightings:"),fileInput(
+        'file_x', 'Choose Excel File'),helpText("Upload Parameter Weightings:"),fileInput(
           'file_a', 'Choose Excel File'))
     }
   })
@@ -164,7 +216,7 @@ shinyServer(function(input, output) {
       if (is.null(inFile_x))
         return(NULL)
       read.xls(
-        inFile_x$datapath, sheet = 1, header = T, sep = ",",row.names = 1
+        inFile_x$datapath, sheet = 1, header = T, sep = ","#,row.names = 1
       ) #gdata read.xls needed for data input because read.xlsx (xlsx package) reads blanck cells. But xlsx needed for writing xlsx files
     }
   })
@@ -175,18 +227,18 @@ shinyServer(function(input, output) {
       if (is.null(inFile_a))
         return(NULL)
       read.xls(
-        inFile_a$datapath, sheet = 1, header = T, sep = ",",row.names = 1
+        inFile_a$datapath, sheet = 1, header = T, sep = ","#,row.names = 1
       ) #gdata read.xls needed for data input because read.xlsx (xlsx package) reads blanck cells. But xlsx needed for writing xlsx files
     }
   })
   
   output$contents4_x <- renderTable({ # show the read constraints
     dataInput4_x()
-  })
+  },include.rownames=F)
   
   output$contents4_a <- renderTable({ # show the read constraints
     dataInput4_a()
-  })
+  },include.rownames=F)
   
   output$weights_x <- renderUI({ # do totals manually
     if(is.null(tmp2())) return(NULL)
@@ -257,6 +309,6 @@ shinyServer(function(input, output) {
   
   
 
-  output$results <- renderTable({results()} , include.rownames = FALSE)
+  output$results <- renderUI({results()})# , include.rownames = FALSE)
   
 })
