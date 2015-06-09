@@ -140,7 +140,7 @@ shinyServer(function(input, output) {
     if(is.null(tmp2())) return(NULL)
     else{
       if(input$radio2 == "Manual"){
-        matrixInput("totals", "Totals Input", as.data.frame(matrix(
+        matrixInput("totals", "Equalities Input", as.data.frame(matrix(
           1,nrow = input$nrow2,ncol = tmp2()
         )))
         
@@ -227,7 +227,7 @@ shinyServer(function(input, output) {
       if (is.null(inFile_a))
         return(NULL)
       read.xls(
-        inFile_a$datapath, sheet = 1, header = T, sep = ","#,row.names = 1
+        inFile_a$datapath, sheet = 1, header = F, sep = ",",row.names = 1
       ) #gdata read.xls needed for data input because read.xlsx (xlsx package) reads blanck cells. But xlsx needed for writing xlsx files
     }
   })
@@ -238,13 +238,13 @@ shinyServer(function(input, output) {
   
   output$contents4_a <- renderTable({ # show the read constraints
     dataInput4_a()
-  },include.rownames=F)
+  },include.rownames=T,include.colnames=F)
   
   output$weights_x <- renderUI({ # do totals manually
     if(is.null(tmp2())) return(NULL)
     else{
       if(input$radio4 == "Manual"){
-        matrixInput("weights_x", "Weights_x Input", as.data.frame(matrix(
+        matrixInput("weights_x", "Component Weights Input", as.data.frame(matrix(
           format(round(1/(tmp2()-1),digits=3),nsmall=3),nrow = 1,ncol = tmp2()-1
         )))
         
@@ -259,8 +259,8 @@ shinyServer(function(input, output) {
     if(is.null(tmp2())) return(NULL)
     else{
       if(input$radio4 == "Manual"){
-        matrixInput("weights_a", "Weights_a Input", as.data.frame(matrix(
-          format(round(1/(tmp()),digits=3),nsmall=3),nrow = 1,ncol = tmp()
+        matrixInput("weights_a", "Parameter Weights Input", as.data.frame(matrix(
+          format(round(1/(tmp()),digits=3),nsmall=3),ncol = 1,nrow = tmp()
         )))
         
       }
