@@ -38,10 +38,10 @@ shinyServer(function(input, output) {
   },include.rownames=F)
   
   output$Example_Wa<-renderTable({
-    tmp<-matrix(c(0.333,0.333,0.333),nrow=1,ncol=3)
-    colnames(tmp)<-c('Param.1','Param.2','Param.3')
+    tmp<-matrix(c(0.333,0.333,0.333),nrow=3,ncol=1)
+    rownames(tmp)<-c('Param.1','Param.2','Param.3')
     return(tmp)
-  },include.rownames=F)
+  },include.rownames=T,include.colnames=F)
   
   output$Example_Blend<-renderTable({
     tmp<-matrix(c(0.25,0.25,0.5),nrow=1,ncol=3)
