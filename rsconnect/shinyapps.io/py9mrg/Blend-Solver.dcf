@@ -1,8 +1,8 @@
 name: Blend-Solver
 account: py9mrg
 server: shinyapps.io
-bundleId: 197261
+bundleId: 197927
 url: https://py9mrg.shinyapps.io/Blend-Solver
-when: 1433338045.07364
+when: 1433430575.9394
 asMultiple: FALSE
 asStatic: FALSE
