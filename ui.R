@@ -3,7 +3,7 @@ require(shiny)
 shinyUI(fluidPage(
   titlePanel("Blend Solver 1.0"),
   tabsetPanel(
-    "Header",
+    id = "Header",
     tabPanel("Introduction",
              h1('Introduction.'),
              helpText('The program (see the next tab) is split in to two regions. The grey control area on the left is for making choices of how you want to enter data, while the white data/results area on the right is for showing you the data you\'ve currently inputted. Here, you can also edit the data if you\'ve selected to enter it manually. The data you need to input to create your blend is separated into sections which are reflected in the sections below. Note, you only actually need to use the first section. Once you\'ve input/uploaded the data and target, the remaining sections generate default values and you can jump to the bottom of the grey area and hit \'Calculate\' immediately. You only need to worry about the other sections if you want to set some constraints on the blend (e.g. force certain components to be less than some proportion of the blend).'),
