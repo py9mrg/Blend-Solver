@@ -83,7 +83,7 @@ shinyServer(function(input, output) {
   
   output$contents <- renderTable({ # show the data table if user imported by file
     dataInput()
-  })
+  }, rownames=T)
   
   output$inmatrix <- renderUI({ # manual data input
     if(is.null(input$nrow)) return(NULL)
@@ -128,7 +128,7 @@ shinyServer(function(input, output) {
         return(NULL)
       read.xls(
         inFile$datapath, sheet = 1, header = T, sep = ","#,row.names = 1
-      ) #gdata read.xls needed for data input because read.xlsx (xlsx package) reads blanck cells. But xlsx needed for writing xlsx files
+      ) #gdata read.xls needed for data input because read.xlsx (xlsx package) reads blank cells. But xlsx needed for writing xlsx files
     }
   })
   

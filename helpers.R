@@ -28,7 +28,7 @@ calculate <- function(raw_data,totals,constraints,weights_x,weights_a) {
   res_props <- par_mat %*% matrix(data = X$X,ncol = 1)
   colnames(res_props)<-"Resulting Properties"
   
-  return(list(renderTable(as.data.frame(tmp_x)),renderTable(as.data.frame(res_props))))
+  return(list(renderTable(as.data.frame(tmp_x), rownames = T),renderTable(as.data.frame(res_props), rownames = T)))
 }
 
 # par_mat<-as.matrix(raw_data[,1:(ncol(raw_data)-1)])
